@@ -50,14 +50,16 @@ namespace SharpLDAPMonitor
                 logger.WriteLine("   /delay:<int>       Delay between two queries in seconds (default: 1).");
                 logger.WriteLine("   /randomize         Randomize delay between two queries, between 1 and 5 seconds.");
                 logger.WriteLine("   /pagesize          Sets the LDAP page size to use in queries (default: 5000).");
+                logger.WriteLine("   /ignoreuserlogons  Ignores user logon events.");
                 logger.WriteLine("   /debug             Debug mode.");
 
                 logger.WriteLine("\nUsage: ldapmonitor.exe /user:DOMAIN\\User /pass:MyP@ssw0rd123! /dcip:192.168.1.1");
                 Environment.Exit(-1);
             }
 
-            // Time delay
+            Boolean ignoreuserlogons = parsed.Arguments.ContainsKey("/ignoreuserlogons");
 
+            // Time delay
             if (!(parsed.Arguments.ContainsKey("/randomize")))
             {
                 if (parsed.Arguments.ContainsKey("/delay"))
@@ -130,7 +132,7 @@ namespace SharpLDAPMonitor
                     results_after = searcher.FindAll();
 
                     // Diff
-                    diff(results_before, results_after, connectionString, logger);
+                    diff(results_before, results_after, connectionString, logger, ignoreuserlogons);
                     results_before = results_after;
 
                     logger.Debug("Waiting " + delayInSeconds + " second.");
@@ -150,8 +152,15 @@ namespace SharpLDAPMonitor
             }
         }
 
-        static void diff(SearchResultCollection results_before, SearchResultCollection results_after, String connectionString, Logger logger)
+        static void diff(SearchResultCollection results_before, SearchResultCollection results_after, String connectionString, Logger logger, Boolean ignoreuserlogons)
         {
+            List<String> ignore_keys = new List<String>();
+            if (ignoreuserlogons)
+            {
+                ignore_keys.Add("lastlogon");
+                ignore_keys.Add("logoncount");
+            }
+
             String dateprompt = "[" + DateTime.UtcNow.ToString("yyyy/MM/dd hh:mm:ss") + "] ";
 
             // Convert into dictionnaries
@@ -191,11 +200,17 @@ namespace SharpLDAPMonitor
 
                 foreach (DictionaryEntry prop in dict_results_before[path])
                 {
-                    dict_direntry_before.Add(prop.Key.ToString(), dict_results_before[path][prop.Key.ToString()][0]);
+                    if (!(ignore_keys.Contains(prop.Key.ToString().ToLower())))
+                    {
+                        dict_direntry_before.Add(prop.Key.ToString(), dict_results_before[path][prop.Key.ToString()][0]);
+                    }
                 };
                 foreach (DictionaryEntry prop in dict_results_after[path])
                 {
-                    dict_direntry_after.Add(prop.Key.ToString(), dict_results_after[path][prop.Key.ToString()][0]);
+                    if (!(ignore_keys.Contains(prop.Key.ToString().ToLower())))
+                    {
+                        dict_direntry_after.Add(prop.Key.ToString(), dict_results_after[path][prop.Key.ToString()][0]);
+                    }
                 };
 
                 // Store different values

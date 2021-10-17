@@ -11,6 +11,7 @@ Param (
     [parameter(Mandatory=$false)][int]$Delay = 1,
     [parameter(Mandatory=$false)][switch]$LDAPS,
     [parameter(Mandatory=$false)][switch]$Randomize,
+    [parameter(Mandatory=$false)][switch]$IgnoreUserLogons,
     [parameter(Mandatory=$false)][switch]$Help
 )
 
@@ -32,6 +33,7 @@ If ($Help) {
     Write-Host "  -LogFile    : Log file to save output to."
     Write-Host "  -Delay      : Delay between two queries in seconds (default: 1)."
     Write-Host "  -Randomize  : Randomize delay between two queries, between 1 and 5 seconds."
+    Write-Host "  -IgnoreUserLogons  : Ignores user logon events."
 
     exit 0
 }
@@ -55,8 +57,8 @@ Function Write-Logger {
     [OutputType([Nullable])]
     Param
     (
-        [Parameter(Mandatory)] $Logfile,
-        [Parameter(Mandatory)] $Message
+        [Parameter(Mandatory=$true)] $Logfile,
+        [Parameter(Mandatory=$true)] $Message
     )
     Begin
     {
@@ -74,12 +76,19 @@ Function ResultsDiff {
     [OutputType([Nullable])]
     Param
     (
-        [Parameter(Mandatory)] $Before,
-        [Parameter(Mandatory)] $After,
-        [Parameter(Mandatory)] $connectionString,
-        [Parameter(Mandatory)] $Logfile
+        [Parameter(Mandatory=$true)] $Before,
+        [Parameter(Mandatory=$true)] $After,
+        [Parameter(Mandatory=$true)] $connectionString,
+        [Parameter(Mandatory=$true)] $Logfile,
+        [parameter(Mandatory=$false)][switch]$IgnoreUserLogons
     )
     Begin {
+        [System.Collections.ArrayList]$ignored_keys = @();
+        If ($IgnoreUserLogons) {
+            $ignored_keys.Add("lastlogon") | Out-Null
+            $ignored_keys.Add("logoncount") | Out-Null
+        }
+
         $dateprompt = ("[{0}] " -f (Get-Date -Format "yyyy/MM/dd hh:mm:ss"));
         # Get Keys
         $dict_results_before = [ordered]@{};
@@ -112,10 +121,14 @@ Function ResultsDiff {
             $dict_direntry_after = [ordered]@{};
 
             Foreach ($propkey in $dict_results_before[$path].Keys) {
-                $dict_direntry_before.Add($propkey, $dict_results_before[$path][$propkey][0]);
+                if (!($ignored_keys -Contains $propkey.ToLower())) {
+                    $dict_direntry_before.Add($propkey, $dict_results_before[$path][$propkey][0]);
+                }
             };
             Foreach ($propkey in $dict_results_after[$path].Keys) {
-                $dict_direntry_after.Add($propkey, $dict_results_after[$path][$propkey][0]);
+                if (!($ignored_keys -Contains $propkey.ToLower())) {
+                    $dict_direntry_after.Add($propkey, $dict_results_after[$path][$propkey][0]);
+                }
             };
 
             # Store different values
@@ -195,7 +208,11 @@ try {
         # Update query
         $results_after = $searcher.FindAll();
         # Diff
-        ResultsDiff -Before $results_before -After $results_after -connectionString $connectionString -Logfile $Logfile
+        if ($IgnoreUserLogons) {
+            ResultsDiff -Before $results_before -After $results_after -connectionString $connectionString -Logfile $Logfile -IgnoreUserLogons
+        } else {
+            ResultsDiff -Before $results_before -After $results_after -connectionString $connectionString -Logfile $Logfile
+        }
         $results_before = $results_after;
         if ($Randomize) {
             $DelayInSeconds = Get-Random -Minimum 1 -Maximum 5
@@ -204,6 +221,7 @@ try {
         Start-Sleep -Seconds $DelayInSeconds
     }
 } catch {
+    Write-Verbose $_.Exception
     Write-Logger -Logfile $Logfile -Message  ("[!] (0x{0:X8}) {1}" -f $_.Exception.HResult, $_.Exception.InnerException.Message)
     exit -1
 }

@@ -370,7 +370,11 @@ def ldap3_kerberos_login(connection, target, user, password, domain='', lmhash='
     return True
 
 
-def diff(last1_query_results, last2_query_results, logger):
+def diff(last1_query_results, last2_query_results, logger, ignore_user_logon=False):
+    ignored_keys = []
+    if ignore_user_logon:
+        ignored_keys.append("lastlogon")
+        ignored_keys.append("logoncount")
     dateprompt = "\x1b[0m[\x1b[96m%s\x1b[0m]" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     common_keys = []
     for key in last2_query_results.keys():
@@ -388,10 +392,11 @@ def diff(last1_query_results, last2_query_results, logger):
         #
         attrs_diff = []
         for p in paths_l1:
-            value_before = dict_path_access(last2_query_results[_dn], p)
-            value_after = dict_path_access(last1_query_results[_dn], p)
-            if value_after != value_before:
-                attrs_diff.append((p, value_after, value_before))
+            if p[-1].lower() not in ignored_keys:
+                value_before = dict_path_access(last2_query_results[_dn], p)
+                value_after = dict_path_access(last1_query_results[_dn], p)
+                if value_after != value_before:
+                    attrs_diff.append((p, value_after, value_before))
         #
         if len(attrs_diff) != 0:
             # Print DN
@@ -430,6 +435,7 @@ def parse_args():
     parser.add_argument("-s", "--page-size", dest="page_size", type=int, default=1000, help="Page size.")
     parser.add_argument("-r", "--randomize-delay", dest="randomize_delay", action="store_true", default=False, help="Randomize delay between two queries, between 1 and 5 seconds.")
     parser.add_argument("-t", "--time-delay", dest="time_delay", type=int, default=1, help="Delay between two queries in seconds (default: 1).")
+    parser.add_argument("--ignore-user-logon", dest="ignore_user_logon", action="store_true", default=False, help="Ignores user logon events.")
 
     authconn = parser.add_argument_group('authentication & connection')
     authconn.add_argument('--dc-ip', dest="dc_ip", action='store', metavar="ip address", help='IP Address of the domain controller or KDC (Key Distribution Center) for Kerberos. If omitted it will use the domain part (FQDN) specified in the identity parameter')
@@ -499,7 +505,7 @@ if __name__ == '__main__':
             #
             last2_query_results = last1_query_results
             last1_query_results = lc.query("(objectClass=*)", attributes=['*'])
-            diff(last1_query_results, last2_query_results, logger=logger)
+            diff(last1_query_results, last2_query_results, logger=logger, ignore_user_logon=args.ignore_user_logon)
 
     except Exception as e:
         raise e
