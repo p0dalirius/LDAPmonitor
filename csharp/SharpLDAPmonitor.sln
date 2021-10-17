@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLDAPmonitor", "SharpLDAPmonitor\SharpLDAPmonitor.csproj", "{D7F5CCAB-BAC1-4EC1-9F29-0A821FC8CD01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7F5CCAB-BAC1-4EC1-9F29-0A821FC8CD01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F5CCAB-BAC1-4EC1-9F29-0A821FC8CD01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F5CCAB-BAC1-4EC1-9F29-0A821FC8CD01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F5CCAB-BAC1-4EC1-9F29-0A821FC8CD01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE84ADC5-94E0-41BC-8E6B-49882F4234B4}
+	EndGlobalSection
+EndGlobal
