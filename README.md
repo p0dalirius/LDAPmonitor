@@ -21,9 +21,9 @@ With this tool you can quickly see if your attack worked and if it changed LDAP 
 | Authenticate with LM:NT hashes                   | :heavy_check_mark: | :x: | :x: |
 | Authenticate with kerberos tickets               | :heavy_check_mark: | :x: | :x: |
 
-## Typical usecases
+## Typical use cases
 
-Here is a few usecases where this tool can be useful:
+Here is a few use cases where this tool can be useful:
 
  - Detect account lockout in real time
    ![](./.github/lockout.png)
