@@ -31,7 +31,7 @@ Here is a few use cases where this tool can be useful:
  - Check if your privilege escalation worked (with ntlmrelay's `--escalate-user` option)
    ![](./.github/)
 
- - Detect when users are logging in to know when to start a network poisoning.
+ - Detect when users are login in to know when to start a network poisoning.
    ![](./.github/user_login.png)
  
 ## Cross platform !
