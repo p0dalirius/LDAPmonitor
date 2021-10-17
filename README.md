@@ -20,7 +20,7 @@ With this tool you can quickly see if your attack worked and if it changed LDAP 
 | Authenticate as current shell user               | :x: | :heavy_check_mark: | :heavy_check_mark: |
 | Authenticate with LM:NT hashes                   | :heavy_check_mark: | :x: | :x: |
 | Authenticate with kerberos tickets               | :heavy_check_mark: | :x: | :x: |
-| Option to ignore user logon events               | :heavy_check_mark: | :x: | :x: 
+| Option to ignore user logon events               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Typical use cases
 
