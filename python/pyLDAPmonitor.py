@@ -104,13 +104,14 @@ class Logger(object):
 ### LDAPConsole
 
 class LDAPConsole(object):
-    def __init__(self, ldap_server, ldap_session, target_dn, logger):
+    def __init__(self, ldap_server, ldap_session, target_dn, logger, page_size=1000):
         super(LDAPConsole, self).__init__()
         self.ldap_server = ldap_server
         self.ldap_session = ldap_session
         self.delegate_from = None
         self.target_dn = target_dn
         self.logger = logger
+        self.page_size = page_size
         self.__results = {}
         self.logger.debug("Using dn: %s" % self.target_dn)
 
@@ -126,7 +127,7 @@ class LDAPConsole(object):
             while paged_response == True:
                 self.ldap_session.search(
                     self.target_dn, query, attributes=attributes,
-                    size_limit=0, paged_size=1000, paged_cookie=paged_cookie
+                    size_limit=0, paged_size=self.page_size, paged_cookie=paged_cookie
                 )
                 #
                 if "controls" in self.ldap_session.result.keys():
@@ -426,6 +427,7 @@ def parse_args():
     parser.add_argument("--debug", dest="debug", action="store_true", default=False, help="Debug mode.")
     parser.add_argument("--no-colors", dest="no_colors", action="store_true", default=False, help="No colors mode.")
     parser.add_argument("-l", "--logfile", dest="logfile", type=str, default=None, help="Log file to save output to.")
+    parser.add_argument("-s", "--page-size", dest="page_size", type=int, default=1000, help="Page size.")
     parser.add_argument("-r", "--randomize-delay", dest="randomize_delay", action="store_true", default=False, help="Randomize delay between two queries, between 1 and 5 seconds.")
     parser.add_argument("-t", "--time-delay", dest="time_delay", type=int, default=1, help="Delay between two queries in seconds (default: 1).")
 
@@ -480,7 +482,7 @@ if __name__ == '__main__':
             args.auth_domain += ".local"
         dn = ','.join(["DC=%s" % part for part in args.auth_domain.split('.')])
 
-        lc = LDAPConsole(ldap_server, ldap_session, dn, logger=logger)
+        lc = LDAPConsole(ldap_server, ldap_session, dn, logger=logger, page_size=args.page_size)
 
         last2_query_results = lc.query("(objectClass=*)", attributes=['*'])
         last1_query_results = last2_query_results
