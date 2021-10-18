@@ -203,7 +203,7 @@ def init_ldap_session(logger, args, domain, username, password, lmhash, nthash):
             target = args.dc_ip
         else:
             target = domain
-    logger.debug("Using target: %s" % target)
+    logger.print("[>] Trying to connect to %s ..." % target)
     if args.use_ldaps is True:
         try:
             return init_ldap_connection(target, ssl.PROTOCOL_TLSv1_2, args, domain, username, password, lmhash, nthash)
