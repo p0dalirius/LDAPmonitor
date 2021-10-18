@@ -195,7 +195,7 @@ def init_ldap_connection(target, tls_version, args, domain, username, password, 
     return ldap_server, ldap_session
 
 
-def init_ldap_session(args, domain, username, password, lmhash, nthash):
+def init_ldap_session(logger, args, domain, username, password, lmhash, nthash):
     if args.use_kerberos:
         target = get_machine_name(args, domain)
     else:
@@ -203,6 +203,7 @@ def init_ldap_session(args, domain, username, password, lmhash, nthash):
             target = args.dc_ip
         else:
             target = domain
+    logger.debug("Using target: %s" % target)
     if args.use_ldaps is True:
         try:
             return init_ldap_connection(target, ssl.PROTOCOL_TLSv1_2, args, domain, username, password, lmhash, nthash)
@@ -475,6 +476,7 @@ if __name__ == '__main__':
             auth_nt_hash = args.auth_hashes
     try:
         ldap_server, ldap_session = init_ldap_session(
+            logger=logger,
             args=args,
             domain=args.auth_domain,
             username=args.auth_username,
