@@ -17,6 +17,7 @@ from ldap3.protocol.formatters.formatters import format_sid
 import time
 import datetime
 import re
+from binascii import unhexlify
 
 
 ### Data utils
