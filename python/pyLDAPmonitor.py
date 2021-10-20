@@ -463,7 +463,7 @@ if __name__ == '__main__':
     args = parse_args()
     logger = Logger(debug=args.debug, nocolors=args.no_colors, logfile=args.logfile)
     logger.print("[+]======================================================")
-    logger.print("[+]    LDAP live monitor v1.1        @podalirius_        ")
+    logger.print("[+]    LDAP live monitor v1.2        @podalirius_        ")
     logger.print("[+]======================================================")
     logger.print()
 
