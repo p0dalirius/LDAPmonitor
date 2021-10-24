@@ -24,7 +24,7 @@ LDAP paged queries returns **pageSize** results per page, and it takes approxima
 ## Usage
 
 ```
-SharpLDAPmonitor.exe /help
+C:\Windows\Temp> SharpLDAPmonitor.exe /help
 [+]======================================================
 [+]  Sharp LDAP live monitor v1.2        @podalirius_
 [+]======================================================
