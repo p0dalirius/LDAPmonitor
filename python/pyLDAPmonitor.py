@@ -487,9 +487,7 @@ if __name__ == '__main__':
         )
 
         logger.debug("Authentication successful!")
-        if "." not in args.auth_domain:
-            args.auth_domain += ".local"
-        dn = ','.join(["DC=%s" % part for part in args.auth_domain.split('.')])
+        dn = ldap_server.info.other["defaultNamingContext"]
 
         lc = LDAPConsole(ldap_server, ldap_session, dn, logger=logger, page_size=args.page_size)
 
