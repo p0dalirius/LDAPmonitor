@@ -14,13 +14,15 @@ With this tool you can quickly see if your attack worked and if it changed LDAP 
 | Random delay in seconds between queries          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Custom delay in seconds between queries          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Save output to logfile                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Colored or not colored output with `--no-colors` | :heavy_check_mark: | :x: | :x: |
+| Colored or not colored output with `--no-colors` | :heavy_check_mark: | :x:                | :x:                |
 | Custom page size for paged queries               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Authenticate with user and password              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Authenticate as current shell user               | :x: | :heavy_check_mark: | :heavy_check_mark: |
-| Authenticate with LM:NT hashes                   | :heavy_check_mark: | :x: | :x: |
-| Authenticate with kerberos tickets               | :heavy_check_mark: | :x: | :x: |
+| Authenticate as current shell user               | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| Authenticate with LM:NT hashes                   | :heavy_check_mark: | :x:                | :x:                |
+| Authenticate with kerberos tickets               | :heavy_check_mark: | :x:                | :x:                |
 | Option to ignore user logon events               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Custom search base                               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Iterate over all naming contexts                 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Typical use cases
 
