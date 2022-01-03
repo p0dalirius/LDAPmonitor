@@ -24,9 +24,9 @@ LDAP paged queries returns **pageSize** results per page, and it takes approxima
 ## Usage
 
 ```
-C:\Windows\Temp> SharpLDAPmonitor.exe /help
+C:\Windows\Temp> .\SharpLDAPmonitor.exe /help
 [+]======================================================
-[+]  Sharp LDAP live monitor v1.2        @podalirius_
+[+]  Sharp LDAP live monitor v1.3        @podalirius_
 [+]======================================================
 
 Required
@@ -36,6 +36,7 @@ Optional
    /user:<username>   User to authenticate as.
    /pass:<password>   Password of the account.
    /ldaps             Use LDAPS instead of LDAP.
+   /searchbase        Sets the LDAP search base.
    /delay:<int>       Delay between two queries in seconds (default: 1).
    /randomize         Randomize delay between two queries, between 1 and 5 seconds.
    /pagesize          Sets the LDAP page size to use in queries (default: 5000).
