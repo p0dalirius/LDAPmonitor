@@ -469,7 +469,7 @@ def query_all_naming_contexts(ldap_server, ldap_session, logger, page_size, sear
     if search_base is not None:
         naming_contexts = [search_base]
     else:
-        naming_contexts = ldap_server.info.other["defaultNamingContext"]
+        naming_contexts = ldap_server.info.naming_contexts
     for nc in naming_contexts:
         lc = LDAPConsole(ldap_server, ldap_session, nc, logger=logger, page_size=page_size)
         _r = lc.query("(objectClass=*)", attributes=['*'])
