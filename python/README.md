@@ -33,8 +33,8 @@ LDAP paged queries returns 1000 results per page, and it takes approximately 1 s
 ## Usage
 
 ```
-$ ./ldapmonitor.py -h
-usage: ldapmonitor.py [-h] [--use-ldaps] [--debug] [--no-colors] [-l LOGFILE] [-r] [-t TIME_DELAY] [--dc-ip ip address] [-d DOMAIN] [-u USER]
+$ ./pyLDAPmonitor.py -h
+usage: pyLDAPmonitor.py [-h] [--use-ldaps] [--debug] [--no-colors] [-l LOGFILE] [-r] [-t TIME_DELAY] [--dc-ip ip address] [-d DOMAIN] [-u USER]
                       [--no-pass | -p PASSWORD | -H [LMHASH:]NTHASH | --aes-key hex key] [-k]
 
 Monitor LDAP changes live!
@@ -73,13 +73,13 @@ authentication & connection:
  - Authenticate with a password:
 
     ```
-    ./ldapmonitor.py -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
+    ./pyLDAPmonitor.py -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
     ```
 
  - Authenticate with LM:NT hashes:
 
     ```
-    ./ldapmonitor.py -u 'Administrator' -d 'LAB.local' --dc-ip 192.168.2.1 -H aad3b435b51404eeaad3b435b51404ee:520126a03f5d5a8d836f1c4f34ede7ce
+    ./pyLDAPmonitor.py -u 'Administrator' -d 'LAB.local' --dc-ip 192.168.2.1 -H aad3b435b51404eeaad3b435b51404ee:520126a03f5d5a8d836f1c4f34ede7ce
     ```
 
 ## Demonstration
