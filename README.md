@@ -1,7 +1,6 @@
 # LDAP Monitor
 
 <p align="center">
-    <img src="https://badges.pufler.dev/visits/p0dalirius/LDAPmonitor/"/>
     <img alt="GitHub downloads" src="https://img.shields.io/github/downloads/p0dalirius/LDAPmonitor/total">
     <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/p0dalirius/LDAPmonitor">
     <a href="https://twitter.com/intent/follow?screen_name=podalirius_" title="Follow"><img src="https://img.shields.io/twitter/follow/podalirius_?label=Podalirius&style=social"></a>
