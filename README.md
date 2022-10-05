@@ -1,4 +1,4 @@
-# LDAP Monitor
+![](./.github/banner.png)
 
 <p align="center">
     Monitor creation, deletion and changes to LDAP objects live during your pentest or system administration!
