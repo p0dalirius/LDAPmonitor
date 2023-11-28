@@ -1,3 +1,2 @@
-python-ldap
 ldap3
-impacket
+sectools
