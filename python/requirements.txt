@@ -1,2 +1,2 @@
 ldap3
-sectools
+sectools>=1.4.1
