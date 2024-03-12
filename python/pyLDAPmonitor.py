@@ -245,7 +245,17 @@ def parse_args():
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
+        
     args = parser.parse_args()
+    
+    if args.auth_password is None and args.no_pass == False and args.auth_hashes is None:
+        print("[+] No password of hashes provided and --no-pass is '%s'" % args.no_pass)
+        from getpass import getpass
+        if args.auth_domain is not None:
+            args.auth_password = getpass("  | Provide a password for '%s\\%s':" % (args.auth_domain, args.auth_username))
+        else:
+            args.auth_password = getpass("  | Provide a password for '%s':" % args.auth_username)
+
     return args
 
 
