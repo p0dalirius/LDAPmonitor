@@ -58,7 +58,7 @@ class Logger(object):
             open(self.logfile, "w").close()
 
     def print(self, message=""):
-        nocolor_message = re.sub("\x1b[\[]([0-9;]+)m", "", message)
+        nocolor_message = re.sub(r"\x1b[\[]([0-9;]+)m", "", message)
         if self.__nocolors:
             print(nocolor_message)
         else:
@@ -69,7 +69,7 @@ class Logger(object):
             f.close()
 
     def info(self, message):
-        nocolor_message = re.sub("\x1b[\[]([0-9;]+)m", "", message)
+        nocolor_message = re.sub(r"\x1b[\[]([0-9;]+)m", "", message)
         if self.__nocolors:
             print("[info] %s" % nocolor_message)
         else:
@@ -81,7 +81,7 @@ class Logger(object):
 
     def debug(self, message):
         if self.__debug == True:
-            nocolor_message = re.sub("\x1b[\[]([0-9;]+)m", "", message)
+            nocolor_message = re.sub(r"\x1b[\[]([0-9;]+)m", "", message)
             if self.__nocolors:
                 print("[debug] %s" % nocolor_message)
             else:
@@ -92,7 +92,7 @@ class Logger(object):
                 f.close()
 
     def error(self, message):
-        nocolor_message = re.sub("\x1b[\[]([0-9;]+)m", "", message)
+        nocolor_message = re.sub(r"\x1b[\[]([0-9;]+)m", "", message)
         if self.__nocolors:
             print("[error] %s" % nocolor_message)
         else:
@@ -114,9 +114,25 @@ class LDAPConsole(object):
         self.logger = logger
         self.page_size = page_size
         self.__results = {}
+        self.all_ldap_attributes = []
         self.logger.debug("Using dn: %s" % self.target_dn)
+        self.get_all_ldap_attributes()
 
-    def query(self, query, attributes=['*'], notify=False):
+    def get_all_ldap_attributes(self):
+        baseDn = "CN=Schema," + self.ldap_server.info.other["configurationNamingContext"][0]
+        # Clear all attributes
+        self.all_ldap_attributes = []
+        # Get all attributes from the schema
+        results = self.query(query="(systemFlags:1.2.840.113556.1.4.803:=4)", baseDn=baseDn, attributes=["lDAPDisplayName"])
+        for dn, entry in results.items():
+            self.all_ldap_attributes.append(entry["lDAPDisplayName"])
+        # Add all attributes
+        self.all_ldap_attributes.append(ldap3.ALL_ATTRIBUTES)
+        # Remove duplicates
+        self.all_ldap_attributes = sorted(list(set(self.all_ldap_attributes)))
+        return self.all_ldap_attributes
+
+    def query(self, query, attributes=['*'], baseDn=None, notify=False):
         # controls
         # https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/3c5e87db-4728-4f29-b164-01dd7d7391ea
         LDAP_PAGED_RESULT_OID_STRING = "1.2.840.113556.1.4.319"
@@ -128,10 +144,24 @@ class LDAPConsole(object):
             paged_response = True
             paged_cookie = None
             while paged_response == True:
-                self.ldap_session.search(
-                    self.target_dn, query, attributes=attributes,
-                    size_limit=0, paged_size=self.page_size, paged_cookie=paged_cookie
-                )
+                if baseDn is not None:
+                    self.ldap_session.search(
+                        baseDn,
+                        query,
+                        attributes=attributes,
+                        size_limit=0,
+                        paged_size=self.page_size,
+                        paged_cookie=paged_cookie
+                    )
+                else:
+                    self.ldap_session.search(
+                        self.target_dn,
+                        query,
+                        attributes=attributes,
+                        size_limit=0,
+                        paged_size=self.page_size,
+                        paged_cookie=paged_cookie
+                    )
                 #
                 if "controls" in self.ldap_session.result.keys():
                     if LDAP_PAGED_RESULT_OID_STRING in self.ldap_session.result["controls"].keys():
